@@ -3,7 +3,7 @@
 **Date:** 2026-04-18
 **Owner:** Doruk Kırali
 **Status:** Design approved, pending implementation plan
-**Repo:** `/Users/dkirali/Desktop/Project/personal-website`
+**Repo:** `/Users/dkirali/Desktop/website`
 
 ---
 
@@ -28,13 +28,14 @@ A personal portfolio website with a **game-gated dual experience**:
 
 | Concern | Choice | Why |
 |---|---|---|
-| Framework | Next.js 15 (App Router, React 19, TypeScript) | User's pick; first-class Vercel deploy; middleware for gate redirects |
+| Framework | Next.js 15 (App Router, React 19, TypeScript) | User's pick; middleware for gate redirects |
 | Styling | Tailwind CSS | Fast pixel-accurate pastiche work |
-| Animation | Framer Motion | Page transitions, photo crossfade, Gandalf reveal |
+| Animation | Framer Motion | Page transitions, Gandalf reveal |
+| Avatar morph | HTML5 Canvas (mosaic/pixelation + crossfade) | Prototyped in `index.html`; port to React component |
 | Email | Resend (free tier, 100/day) | First-party Next.js SDK; simplest route |
 | Pong | HTML5 Canvas + vanilla TS | ~200 LOC; no engine needed |
-| Deployment | Vercel | Free, GitHub-linked CI/CD |
-| Domain | Custom (TBD) | User will purchase separately |
+| Deployment | Hetzner VPS + Coolify | User already pays €3/mo for the server; Coolify gives Vercel-like auto-deploy from GitHub with zero per-build cost |
+| Domain | Custom (TBD) | User will purchase separately; DNS points at Hetzner IP |
 
 **Not using:** Three.js (no real 3D needed), headless CMS (content is static), any auth (no accounts).
 
@@ -194,39 +195,43 @@ else next() // render the Pong page
 
 ## 10. Content inventory — what needs to be gathered
 
-### Already identified
-- Resume: `/Users/dkirali/Desktop/Personal/Resume/Doruk Kirali Resume 2026.doc` → source for bio, experience, skills, LinkedIn/GitHub URLs
+### Already identified / in place
+- Resume: `/Users/dkirali/Desktop/website/Assets/Doruk Kirali Resume 2026.pdf` + `.doc` → source for bio, experience, skills, LinkedIn/GitHub URLs
+- Clean headshot: `/Users/dkirali/Desktop/website/Assets/Normal.png`
+- Pixel-art headshot: `/Users/dkirali/Desktop/website/Assets/Pixel.png` (gamer with headset, HUD, hearts/coins/potions)
+- GitHub: https://github.com/Dkirali
+  - Jobbot → repo `Automated-Application` (displayed as "Jobbot")
+  - FLŌW → repo `flow`
+- Steam-pastiche mockup: `/Users/dkirali/Desktop/website/index.html` (reference for `/dashboard` implementation; copy/adapt, do not re-design)
 
 ### To locate / produce
 | Item | Status | Destination |
 |---|---|---|
-| CV PDF | Location TBD on Desktop | `/public/cv.pdf` |
-| Professional headshot | Location TBD on Desktop | `/public/headshot.jpg` |
-| Pixelated "gamer with headset" headshot | To be generated (Photoshop/AI) | `/public/headshot-gaming.png` |
+| CV PDF | Exists on Desktop; confirm final filename | `/public/cv.pdf` |
 | Gandalf "You shall not pass" clip | To be sourced (short MP4 or GIF, ~3s) | `/public/gandalf.mp4` |
-| Jobbot GitHub URL | To be confirmed | Used in project card |
-| Flaw App GitHub URL | To be confirmed | Used in project card |
 | Project screenshots (optional) | Optional | `/public/projects/` — fallback: CSS gradients |
-| Domain name | Not yet purchased | Added via Vercel after purchase |
+| Domain name | Not yet purchased | DNS A-record points at Hetzner server IP after purchase |
 
 ---
 
 ## 11. Deployment
 
-- **Platform:** Vercel (free tier)
-- **CI/CD:** GitHub-linked; every push to `main` deploys to production
-- **Preview deploys:** every PR gets a preview URL
-- **Custom domain:** added via Vercel's DNS settings once purchased (one CNAME/A record)
-- **Environment variables:** `RESEND_API_KEY`
+- **Platform:** Hetzner VPS (already provisioned, €3/mo) running **Coolify** (self-hosted PaaS)
+- **Build artifact:** Next.js standalone output, containerized. Coolify builds from `Dockerfile` (or its Nixpacks builder) on every push to `main`.
+- **CI/CD:** Coolify listens to a GitHub webhook on `main` → pulls, builds, deploys. Preview environments per-PR supported but optional.
+- **TLS:** Coolify provisions Let's Encrypt certificates automatically.
+- **Custom domain:** after purchase, create an A record pointing at the Hetzner server IP and add the domain in Coolify's UI.
+- **Environment variables:** `RESEND_API_KEY` (set in Coolify's UI; never committed).
+- **Secrets hygiene:** `.env.local` gitignored; production env read from Coolify only.
 
 ---
 
 ## 12. Open questions (to resolve before implementation)
 
-1. **CV + headshot locations** — user to confirm exact paths
-2. **Domain name** — user to choose + purchase (suggestions: `doruk.dev`, `dorukkirali.com`, `doruk.gg`)
-3. **Pong color palette** — green-on-black vs amber-on-black (low-stakes, can be picked during build)
-4. **Pixelated headshot creation method** — Photoshop / AI (Midjourney/DALL-E) / separate illustration
+1. **CV filename** — confirm the exact PDF to copy into `/public/cv.pdf`
+2. **Domain name** — user to choose + purchase (suggestions: `doruk.dev`, `dorukkirali.com`, `doruk.gg`); not blocking build
+3. **Pong color palette** — green-on-black vs amber-on-black (low-stakes, picked during build)
+4. **Gandalf clip** — sourced during build
 
 ---
 
@@ -260,7 +265,8 @@ else next() // render the Pong page
 ## 15. Brainstorm artifacts
 
 Mockups generated during brainstorming are saved in:
-`/Users/dkirali/Desktop/Project/personal-website/.superpowers/brainstorm/`
+`/Users/dkirali/Desktop/website/.superpowers/brainstorm/` (earlier iterations)
+`/Users/dkirali/Desktop/website/index.html` — working Steam-pastiche mockup with live avatar morph, used as visual reference for `/dashboard`
 
 - `professional-style.html` — Options A (LinkedIn) vs B (editorial)
 - `professional-style-v2.html` — Options C (read.cv), D (GitHub README), E (printed resume)
