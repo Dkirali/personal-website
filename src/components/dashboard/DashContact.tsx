@@ -1,3 +1,4 @@
+import { ContactForm } from '@/components/contact/ContactForm';
 import { CVDownload } from '@/components/cv/CVDownload';
 
 export function DashContact() {
@@ -6,9 +7,7 @@ export function DashContact() {
       <div className="cta-card">
         <h4>📮 Send me a message</h4>
         <p>Reach out for roles, collabs, or to swap game recommendations.</p>
-        <button type="button" className="btn cta">
-          Open Message Form
-        </button>
+        <ContactForm variant="dashboard" />
       </div>
       <div className="cta-card">
         <h4>📄 Download full CV</h4>
