@@ -18,7 +18,7 @@
   --cta-2: #a4d007;
   --positive: #66bb6a;
 
-  font-family: 'Inter', Arial, sans-serif;
+  font-family: var(--font-geist-sans), 'Inter', Arial, sans-serif;
   color: var(--text);
   background: var(--chrome);
   background-image: radial-gradient(ellipse at top, #2a475e 0%, #1b2838 40%, #16202d 100%);
@@ -155,7 +155,7 @@
 .steam .featured .hero-art::before {
   content: attr(data-title);
   position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
-  font-family: 'Press Start 2P', monospace;
+  font-family: var(--font-pixel), 'Press Start 2P', monospace;
   font-size: 36px; color: #fff;
   text-shadow: 2px 2px 0 #66c0f4, 4px 4px 0 #1b9aff, 6px 6px 16px rgba(0,0,0,0.8);
   letter-spacing: 4px;
@@ -217,7 +217,7 @@
   display: flex; align-items: center; justify-content: center;
 }
 .steam .game-art .title {
-  font-family: 'Press Start 2P', monospace;
+  font-family: var(--font-pixel), 'Press Start 2P', monospace;
   color: #fff; font-size: 18px; letter-spacing: 2px; text-align: center;
   text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
 }
