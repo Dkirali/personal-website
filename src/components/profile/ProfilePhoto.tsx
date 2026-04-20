@@ -69,10 +69,15 @@ export function ProfilePhoto({
 
     let rafId = 0;
 
+    // Reused offscreen buffer — resized per frame rather than re-allocated
+    // to avoid continuous GC pressure during the morph.
+    const small = document.createElement('canvas');
+    const sctx = small.getContext('2d');
+
     const drawFrame = () => {
       const a = linkedinRef.current;
       const b = gamingRef.current;
-      if (!a || !b) return;
+      if (!a || !b || !sctx) return;
       // easeInOutSine
       const p = -(Math.cos(Math.PI * progressRef.current) - 1) / 2;
       const bell = Math.sin(p * Math.PI);
@@ -80,11 +85,12 @@ export function ProfilePhoto({
       const src = p < 0.5 ? a : b;
       const cells = Math.ceil(size / cellSize);
 
-      const small = document.createElement('canvas');
-      small.width = cells;
-      small.height = cells;
-      const sctx = small.getContext('2d');
-      if (!sctx) return;
+      if (small.width !== cells || small.height !== cells) {
+        small.width = cells;
+        small.height = cells;
+      } else {
+        sctx.clearRect(0, 0, cells, cells);
+      }
       sctx.imageSmoothingEnabled = !src.pixelated;
       sctx.drawImage(src.canvas, 0, 0, cells, cells);
 

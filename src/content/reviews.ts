@@ -13,10 +13,10 @@ export interface Review {
   overlapHours?: number;
   /** "recommend" percentage, surfaced on /dashboard. */
   recommendPct?: number;
-  email?: string;
-  phone?: string;
 }
 
+// NOTE: Full contact details for references (email, phone) are available
+// on request and are intentionally NOT shipped in the client bundle.
 export const reviews: Review[] = [
   {
     id: 'jim-virgin',
@@ -29,8 +29,6 @@ export const reviews: Review[] = [
     verdict: 'Recommended · 10 / 10',
     overlapHours: 4300,
     recommendPct: 98,
-    email: 'Jim.Virgin@ingrammicro.com',
-    phone: '+1 (416) 697 21 00',
   },
   {
     id: 'sarim-khawaja',
@@ -43,7 +41,5 @@ export const reviews: Review[] = [
     verdict: 'Recommended · 10 / 10',
     overlapHours: 9500,
     recommendPct: 99,
-    email: 'sarim.khawaja@styxintel.com',
-    phone: '+1 (672) 338 1168',
   },
 ];
