@@ -36,6 +36,7 @@ export function PongGame() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     let raf = 0;
+    let winTimeout: ReturnType<typeof setTimeout> | null = null;
 
     const render = () => {
       const s = stateRef.current;
@@ -95,7 +96,7 @@ export function PongGame() {
             phaseRef.current = 'won';
             setPhase('won');
             setPathway('gaming');
-            setTimeout(() => router.push('/dashboard'), 1500);
+            winTimeout = setTimeout(() => router.push('/dashboard'), 1500);
           } else {
             sfx.lose();
             lossCountRef.current += 1;
@@ -110,7 +111,10 @@ export function PongGame() {
     };
 
     raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      if (winTimeout) clearTimeout(winTimeout);
+    };
   }, [router]);
 
   // Input handling
@@ -177,7 +181,9 @@ export function PongGame() {
           ref={canvasRef}
           width={FIELD.w}
           height={FIELD.h}
-          className="w-full h-auto block crt-glow"
+          tabIndex={0}
+          role="application"
+          className="w-full h-auto block crt-glow focus:outline-none"
           aria-label={`Pong game, first to ${WIN_SCORE} points`}
         />
         {phase === 'lost-1' && (
