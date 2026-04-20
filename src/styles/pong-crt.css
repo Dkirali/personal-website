@@ -1,0 +1,38 @@
+/* CRT scanline + vignette overlay for the Pong canvas. */
+.crt {
+  position: relative;
+  font-family: var(--font-pixel), "Press Start 2P", ui-monospace, monospace;
+  color: #7cff7c;
+  background: #000;
+}
+
+.crt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0 2px,
+    rgba(0, 0, 0, 0.25) 2px 3px
+  );
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.crt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  pointer-events: none;
+}
+
+.crt-glow {
+  text-shadow:
+    0 0 6px currentColor,
+    0 0 16px currentColor;
+}
