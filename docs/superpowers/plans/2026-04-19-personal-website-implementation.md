@@ -92,6 +92,93 @@ Each file has one responsibility. Pure logic (physics, validation, rate limiting
 
 ---
 
+## Phase -1 — GitHub repo + branch strategy
+
+Goal: a private GitHub repo where `main` always reflects the last shipped phase, and each phase merges via its own PR so Coolify only deploys reviewed code.
+
+**Branch strategy (locked in):**
+- **One PR per phase**, except Phase 0 + Phase 1 bundled into one "infra" PR (neither is visibly testable alone).
+- Squash-merge every PR so `main` is one commit per phase.
+- Tag after each merge: `phase-0-1-infra`, `phase-2-pong`, `phase-3-pro`, `phase-4-dashboard`, `phase-5-contact`, `phase-6-deployable`, `phase-7-polish`.
+- Coolify webhook watches `main` → production deploy only after merge.
+
+### Task -1.1: Create private GitHub repo + push existing main
+
+**Files:** none new; existing git history pushes to remote.
+
+- [ ] **Step 1:** Create repo on GitHub (private). Suggested name: `personal-website`. Do NOT initialize with README — we have one coming.
+
+```bash
+gh repo create Dkirali/personal-website --private --source=/Users/dkirali/Desktop/website --remote=origin --push=false
+```
+
+- [ ] **Step 2:** Push existing `main`
+
+```bash
+cd /Users/dkirali/Desktop/website
+git remote -v   # verify origin points at github.com:Dkirali/personal-website
+git push -u origin main
+```
+
+- [ ] **Step 3:** Set up branch protection on `main` via GitHub UI:
+  - Require pull request before merging
+  - Require conversation resolution before merging
+  - Allow force pushes: off
+
+- [ ] **Step 4:** No commit needed — the commits already on `main` (spec + plan) are now pushed.
+
+### Task -1.2: Create working branch for infra PR
+
+- [ ] **Step 1:** Branch off
+
+```bash
+git checkout -b phase-0-1-infra
+```
+
+All Phase 0 + Phase 1 commits land on this branch. Open PR against `main` at the end of Phase 1.
+
+- [ ] **Step 2:** Confirm you're on the new branch
+
+```bash
+git branch --show-current
+# expected: phase-0-1-infra
+```
+
+### Task -1.3: PR template
+
+**Files:**
+- Create: `.github/pull_request_template.md`
+
+- [ ] **Step 1:** Write
+
+```markdown
+## Phase
+<!-- Which phase of docs/superpowers/plans/2026-04-19-personal-website-implementation.md -->
+
+## What's in this PR
+-
+
+## How to review
+1. `pnpm install`
+2. `pnpm test`
+3. `pnpm dev` and walk the flows described above
+
+## Checklist
+- [ ] All tasks in the phase checked off in the plan doc
+- [ ] `pnpm test` green
+- [ ] `pnpm build` green
+- [ ] Manually verified in browser
+```
+
+- [ ] **Step 2:** Commit on the `phase-0-1-infra` branch (this will become part of the first PR)
+
+```bash
+git add .github/pull_request_template.md
+git commit -m "chore: add PR template referencing the implementation plan"
+```
+
+---
+
 ## Phase 0 — Project scaffold
 
 Goal: empty, type-checking, test-passing Next.js app that builds and boots.
@@ -2427,6 +2514,8 @@ git commit -am "perf: Lighthouse polish on /pro and /dashboard"
 
 ## Execution notes
 
-- **Tag rollout points:** after Phase 2 (`pong-playable`), Phase 4 (`dashboard-visual-complete`), Phase 6 (`deployable`). Use `git tag -a <name> -m ...` so you can roll back fast.
+- **One PR per phase** (0+1 bundled) as defined in Phase -1. Tag after each merge.
+- **Subagents in use** (from `everything-claude-code`): `typescript-reviewer` between tasks; `tdd-guide` for lib/ tasks in Phases 1/2/5; `security-reviewer` after Phase 5; `build-error-resolver` on failures; `e2e-runner` for Phase 7; `docs-lookup` (Context7) for Next 15 / Resend / Coolify version-specific lookups; `code-reviewer` at phase boundaries; `refactor-cleaner` after Phase 4.
+- **Orchestrated via** `superpowers:subagent-driven-development` — one fresh general-purpose agent per task, reviewers between tasks.
 - **When in doubt, delete the reference:** `reference/steam-mockup.html` exists only as a visual checklist for Phase 4. Don't import from it; it's not on the runtime path.
 - **Don't mass-refactor extracted content later.** Each content module is small on purpose — a single long file with all content would lose the "files that change together live together" benefit.
