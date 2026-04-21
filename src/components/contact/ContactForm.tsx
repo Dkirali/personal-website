@@ -5,7 +5,7 @@ import { contactSchema } from '@/lib/contact-schema';
 type Status = 'idle' | 'sending' | 'sent' | 'error';
 
 interface ContactFormProps {
-  variant?: 'pro' | 'dashboard';
+  variant?: 'pro' | 'dashboard' | 'portfolio';
 }
 
 export function ContactForm({ variant = 'pro' }: ContactFormProps) {
@@ -53,14 +53,23 @@ export function ContactForm({ variant = 'pro' }: ContactFormProps) {
   }
 
   const inputCls =
-    variant === 'pro'
-      ? 'w-full p-2 border border-neutral-300 rounded text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#0a66c2]'
-      : 'w-full p-2 bg-[#1b2838] border border-[#2a475e] rounded text-sm text-white placeholder:text-[#8f98a0] focus:outline-none focus:ring-2 focus:ring-[#66c0f4]';
+    variant === 'portfolio'
+      ? 'w-full p-3 rounded-xl border border-neutral-200 bg-white/70 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-neutral-700 dark:bg-neutral-900/70 dark:text-neutral-100 dark:placeholder:text-neutral-500'
+      : variant === 'pro'
+        ? 'w-full p-2 border border-neutral-300 rounded text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#0a66c2]'
+        : 'w-full p-2 bg-[#1b2838] border border-[#2a475e] rounded text-sm text-white placeholder:text-[#8f98a0] focus:outline-none focus:ring-2 focus:ring-[#66c0f4]';
   const btnCls =
-    variant === 'pro'
-      ? 'inline-flex items-center gap-2 px-4 py-2 bg-[#0a66c2] hover:bg-[#084a8f] text-white rounded text-sm font-medium disabled:opacity-60 transition-colors'
-      : 'inline-flex items-center gap-2 px-4 py-2 bg-[#5c7e10] hover:bg-[#6fa71a] text-white rounded text-sm font-medium disabled:opacity-60 transition-colors';
-  const mutedCls = variant === 'pro' ? 'text-neutral-500' : 'text-[#8f98a0]';
+    variant === 'portfolio'
+      ? 'inline-flex items-center gap-2 rounded-full bg-indigo-600 px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 disabled:opacity-60 transition-colors'
+      : variant === 'pro'
+        ? 'inline-flex items-center gap-2 px-4 py-2 bg-[#0a66c2] hover:bg-[#084a8f] text-white rounded text-sm font-medium disabled:opacity-60 transition-colors'
+        : 'inline-flex items-center gap-2 px-4 py-2 bg-[#5c7e10] hover:bg-[#6fa71a] text-white rounded text-sm font-medium disabled:opacity-60 transition-colors';
+  const mutedCls =
+    variant === 'portfolio'
+      ? 'text-neutral-500 dark:text-neutral-400'
+      : variant === 'pro'
+        ? 'text-neutral-500'
+        : 'text-[#8f98a0]';
 
   return (
     <form onSubmit={onSubmit} className="space-y-3 max-w-md" noValidate>

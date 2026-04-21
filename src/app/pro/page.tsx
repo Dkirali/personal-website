@@ -1,14 +1,15 @@
 import type { Metadata } from 'next';
-import { ProBanner } from '@/components/pro/ProBanner';
-import { ProProfileCard } from '@/components/pro/ProProfileCard';
-import { ProAbout } from '@/components/pro/ProAbout';
-import { ProFeatured } from '@/components/pro/ProFeatured';
-import { ProExperience } from '@/components/pro/ProExperience';
-import { ProEducation } from '@/components/pro/ProEducation';
-import { ProSkills } from '@/components/pro/ProSkills';
-import { ProContact } from '@/components/pro/ProContact';
-import { ProFooter } from '@/components/pro/ProFooter';
 import { bio } from '@/content/bio';
+import { PortfolioNav } from '@/components/portfolio/PortfolioNav';
+import { PortfolioHero } from '@/components/portfolio/PortfolioHero';
+import { PortfolioStats } from '@/components/portfolio/PortfolioStats';
+import { PortfolioAbout } from '@/components/portfolio/PortfolioAbout';
+import { PortfolioServices } from '@/components/portfolio/PortfolioServices';
+import { PortfolioExperience } from '@/components/portfolio/PortfolioExperience';
+import { PortfolioProjects } from '@/components/portfolio/PortfolioProjects';
+import { PortfolioEmployers } from '@/components/portfolio/PortfolioEmployers';
+import { PortfolioContact } from '@/components/portfolio/PortfolioContact';
+import { PortfolioFooter } from '@/components/portfolio/PortfolioFooter';
 
 export const metadata: Metadata = {
   title: `${bio.name} — ${bio.title}`,
@@ -17,18 +18,19 @@ export const metadata: Metadata = {
 
 export default function ProPage() {
   return (
-    <main className="bg-neutral-100 min-h-screen text-neutral-900">
-      <ProBanner />
-      <div className="max-w-3xl mx-auto space-y-4 pb-6">
-        <ProProfileCard />
-        <ProAbout />
-        <ProFeatured />
-        <ProExperience />
-        <ProEducation />
-        <ProSkills />
-        <ProContact />
-        <ProFooter />
-      </div>
-    </main>
+    <div className="min-h-screen bg-neutral-50 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
+      <PortfolioNav />
+      <main>
+        <PortfolioHero />
+        <PortfolioStats />
+        <PortfolioAbout />
+        <PortfolioServices />
+        <PortfolioExperience />
+        <PortfolioProjects />
+        <PortfolioEmployers />
+        <PortfolioContact />
+      </main>
+      <PortfolioFooter />
+    </div>
   );
 }
